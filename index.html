@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodawanie elementów</title>
+    <style>
+        body { background-color: rgb(149, 119, 231); margin: 0; text-align: center; }
+        .container { position: absolute; top: 20%; left: 50%; transform: translate(-50%, -20%); }
+        .form-wrapper { border: 2px solid black; padding: 20px; border-radius: 8px; background-color: white; display: inline-block; }
+        .message-container { display: flex; align-items: center; margin-top: 5px; padding: 12px; border-radius: 5px; gap: 10px; }
+        .message-container p { font-size: 18px; font-weight: bold; }
+        .error-message { color: red; font-weight: bold; }
+        button { background-color: rgb(172, 135, 196); padding: 5px; cursor: pointer; }
+        button:hover { background-color: rgb(51, 37, 68); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <h1>Dodawanie elementów</h1>
+            <form>
+                <label>Imię:</label><input id="name" type="text"><span id="nameError" class="error-message"></span><br><br>
+                <label>Nazwisko:</label><input id="surname" type="text"><span id="surnameError" class="error-message"></span><br><br>
+                <label>Pełnoletność:</label><input id="adult" type="checkbox"><br><br>
+                <label>Kolor czcionki:</label><input id="color" type="color"><br><br>
+                <label>Kolor tła:</label><input id="background" type="color"><br><br>
+                <input id="noBackground" type="checkbox"> Brak tła<br><br>
+                <button type="button" id="addElement">Dodaj element</button>
+                <button type="button" id="clearAll">Wyczyść wszystko</button>
+            </form>
+            <div id="messageContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const name = document.getElementById('name');
+        const surname = document.getElementById('surname');
+        const nameError = document.getElementById('nameError');
+        const surnameError = document.getElementById('surnameError');
+        const adult = document.getElementById('adult');
+        const color = document.getElementById('color');
+        const background = document.getElementById('background');
+        const noBackground = document.getElementById('noBackground');
+        const messageContainer = document.getElementById('messageContainer');
+
+        document.getElementById('addElement').addEventListener('click', () => {
+            let nameValue = name.value.trim();
+            let surnameValue = surname.value.trim();
+            nameError.innerText = surnameError.innerText = "";
+
+            if (!nameValue || !surnameValue) {
+                if (!nameValue) nameError.innerText = "Podaj dane!";
+                if (!surnameValue) surnameError.innerText = "Podaj dane!";
+                return;
+            }
+            if (nameValue.length < 2) return nameError.innerText = "Imię musi mieć co najmniej 2 litery!";
+            if (surnameValue.length < 2) return surnameError.innerText = "Nazwisko musi mieć co najmniej 2 litery!";
+
+            let messageWrapper = document.createElement("div");
+            messageWrapper.classList.add("message-container");
+            messageWrapper.style.backgroundColor = noBackground.checked ? "transparent" : background.value;
+
+            let message = document.createElement("p");
+            message.innerText = `${nameValue} ${surnameValue}, ${adult.checked ? "jesteś pełnoletni/a" : "nie jesteś pełnoletni/a"}`;
+            message.style.color = color.value;
+
+            let deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "Usuń";
+            deleteBtn.addEventListener("click", () => messageWrapper.remove());
+
+            messageWrapper.append(message, deleteBtn);
+            messageContainer.appendChild(messageWrapper);
+        });
+
+        document.getElementById('clearAll').addEventListener('click', () => messageContainer.innerHTML = "");
+    </script>
+</body>
+</html>
