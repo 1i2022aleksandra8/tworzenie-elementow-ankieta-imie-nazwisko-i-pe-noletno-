@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodawanie elementów</title>
+</head>
+<style>
+    body {
+        background-color: rgb(149, 119, 231);
+    }
+    h1 {
+        color:rgb(94, 69, 184);
+    }
+    button {
+        background-color: rgb(172, 135, 196);
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+    button:hover {
+        background-color: rgb(51, 37, 68);
+    }
+    .message-container {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+    }
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dodawanie elementów</h1>
+        </header>
+        <main>
+            <form id="elementForm">
+                <label for="name">Imię:</label><br>
+                <input id="name" type="text"><br><br>
+
+                <label for="surname">Nazwisko:</label><br>
+                <input id="surname" type="text"><br><br>
+
+                <label for="adult">Pełnoletność:</label>
+                <input id="adult" type="checkbox"><br><br>
+
+                <label for="color">Wybierz kolor czcionki:</label>
+                <input id="color" type="color"><br><br>
+
+                <label for="background">Wybierz kolor tła (opcjonalne):</label>
+                <input id="background" type="color"><br><br>
+
+                <button type="button" id="addElement">Dodaj element</button>
+                <button type="button" id="clearAll">Wyczyść wszystko</button>
+            </form>
+            <div id="messageContainer"></div>
+        </main>
+    </div>
+
+    <script>
+        const messageContainer = document.querySelector('#messageContainer');
+        const addBtn = document.querySelector('#addElement');
+        const clearBtn = document.querySelector('#clearAll');
+        const name = document.querySelector('#name');
+        const surname = document.querySelector('#surname');
+        const adult = document.querySelector('#adult');
+        const color = document.querySelector('#color');
+        const background = document.querySelector('#background');
+
+        addBtn.addEventListener('click', function () {
+            const nameValue = name.value.trim();
+            const surnameValue = surname.value.trim();
+
+            if (nameValue.length < 2 || surnameValue.length < 2) {
+                alert("Imię i nazwisko muszą mieć co najmniej 2 litery!");
+                return;
+            }
+
+            const messageWrapper = document.createElement("div");
+            messageWrapper.classList.add("message-container");
+
+            const message = document.createElement("p");
+            message.innerText = `${nameValue} ${surnameValue}, ${adult.checked ? "jesteś pełnoletni/a" : "nie jesteś pełnoletni/a"}`;
+            message.style.color = color.value;
+
+            if (background.value) {
+                message.style.backgroundColor = background.value;
+            }
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "Usuń";
+            deleteBtn.addEventListener("click", function () {
+                messageWrapper.remove();
+            });
+
+            messageWrapper.appendChild(message);
+            messageWrapper.appendChild(deleteBtn);
+            messageContainer.appendChild(messageWrapper);
+        });
+
+        clearBtn.addEventListener('click', function () {
+            messageContainer.innerHTML = "";
+        });
+    </script>
+</body>
+</html>
+
